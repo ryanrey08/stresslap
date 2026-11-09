@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# mediapipe wasm (copied from node_modules on install)
+/public/mediapipe/
+
+!.env.example

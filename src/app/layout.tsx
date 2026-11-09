@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bangers, Nunito } from "next/font/google";
-import { isIndexable, site, siteUrl } from "@/lib/site";
+import { googleSiteVerification, isIndexable, site, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const display = Bangers({ variable: "--font-bangers", weight: "400", subsets: ["latin"], display: "swap" });
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   creator: site.name,
   publisher: site.name,
   category: site.category,
+  referrer: "strict-origin-when-cross-origin",
+  ...(googleSiteVerification ? { verification: { google: googleSiteVerification } } : {}),
   alternates: { canonical: "/" },
   icons: {
     icon: [
@@ -33,14 +35,14 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: site.name,
-    title: site.title,
+    title: site.socialTitle,
     description: site.description,
     locale: site.locale,
     images: [{ ...site.ogImage, type: "image/png" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: site.title,
+    title: site.socialTitle,
     description: site.description,
     images: [{ url: site.ogImage.url, alt: site.ogImage.alt }],
   },

@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { About, Faq, Footer, HowItWorks } from "@/components/InfoSections";
+import { About, Actions, DownloadGuide, FaceDetection, Faq, Footer, HowItWorks } from "@/components/InfoSections";
 import { SoundProvider } from "@/components/SoundController";
 import { StressLapApp } from "@/components/StressLapApp";
 import { StructuredData } from "@/components/StructuredData";
@@ -12,8 +12,11 @@ export default function Home() {
       <Header />
       <main>
         <StressLapApp />
-        <HowItWorks />
         <About />
+        <HowItWorks />
+        <FaceDetection />
+        <Actions />
+        <DownloadGuide />
         <Faq />
       </main>
       <Footer />

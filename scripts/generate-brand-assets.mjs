@@ -8,6 +8,7 @@
  *   public/favicon.ico             16/32/48 px, PNG-in-ICO
  *   public/favicon.svg             scalable favicon for modern browsers
  *   public/icon.png                192x192
+ *   public/icon-192.png            192x192 (referenced by the web app manifest)
  *   public/icon-512.png            512x512
  *   public/icon-maskable-512.png   512x512, full-bleed with safe zone (Android adaptive icons)
  *   public/apple-icon.png          180x180, opaque (iOS ignores transparency)
@@ -18,6 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
 import { ImageResponse } from "next/dist/compiled/@vercel/og/index.node.js";
+import sharp from "sharp";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const brandDir = path.join(root, "scripts/brand");
@@ -44,6 +46,9 @@ async function render(element, width, height) {
   const res = new ImageResponse(element, { width, height, fonts });
   return Buffer.from(await res.arrayBuffer());
 }
+
+/** Quantised PNG: keeps social crawlers happy and icons small with no visible quality loss. */
+const optimize = (png) => sharp(png).png({ palette: true, quality: 92, effort: 10, compressionLevel: 9, dither: 0.6 }).toBuffer();
 
 /**
  * The logo mark: starburst + "SL", tilted -12deg like the header.
@@ -240,10 +245,12 @@ for (const [size, scale] of icoSizes) icoImages.push({ size, png: await render(b
 
 await writeFile(out("public/favicon.ico"), packIco(icoImages));
 await writeFile(out("public/favicon.svg"), faviconSvg);
-await writeFile(out("public/icon.png"), await render(tileIcon(192), 192, 192));
-await writeFile(out("public/icon-512.png"), await render(tileIcon(512), 512, 512));
-await writeFile(out("public/icon-maskable-512.png"), await render(tileIcon(512, { pad: 0.2, radius: 0 }), 512, 512));
-await writeFile(out("public/apple-icon.png"), await render(tileIcon(180, { pad: 0.08, radius: 0 }), 180, 180));
-await writeFile(out("public/og-image.png"), await render(ogImage(), 1200, 630));
+const icon192 = await optimize(await render(tileIcon(192), 192, 192));
+await writeFile(out("public/icon.png"), icon192);
+await writeFile(out("public/icon-192.png"), icon192);
+await writeFile(out("public/icon-512.png"), await optimize(await render(tileIcon(512), 512, 512)));
+await writeFile(out("public/icon-maskable-512.png"), await optimize(await render(tileIcon(512, { pad: 0.2, radius: 0 }), 512, 512)));
+await writeFile(out("public/apple-icon.png"), await optimize(await render(tileIcon(180, { pad: 0.08, radius: 0 }), 180, 180)));
+await writeFile(out("public/og-image.png"), await optimize(await render(ogImage(), 1200, 630)));
 
 console.log("Brand assets written.");

@@ -67,29 +67,12 @@ npm run build && npm start
 
 ## SEO, icons and production URL
 
-Copy `.env.example` to `.env.local` (or set the variable in your host) before a production build:
+See [docs/SEO.md](docs/SEO.md) for the implementation, Vercel environment variables, Google Search
+Console steps and the post-deploy checklist. In short:
 
-```bash
-NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
-```
-
-It drives `metadataBase`, canonical URLs, Open Graph URLs, `/sitemap.xml` and `/robots.txt`
-(see `src/lib/site.ts`). On Vercel the production domain is used automatically if the variable is
-unset. Any other production build without it falls back to localhost **and is marked noindex**, so
-localhost URLs are never published.
-
-- Metadata: `src/app/layout.tsx` (title template, Open Graph, Twitter/X card, robots, icons)
-- `src/app/manifest.ts`, `src/app/sitemap.ts`, `src/app/robots.ts`
-- JSON-LD (`WebSite` + `WebApplication`): `src/components/StructuredData.tsx`
-- Icons and the social image are generated from the header logo:
-
-```bash
-node scripts/generate-brand-assets.mjs
-```
-
-It writes `public/favicon.ico`, `public/favicon.svg`, `public/icon.png` (192),
-`public/icon-512.png`, `public/icon-maskable-512.png`, `public/apple-icon.png` (180) and
-`public/og-image.png` (1200x630). The outputs are committed, so builds do not need to run it.
+- `NEXT_PUBLIC_SITE_URL=https://stresslap.com` drives every absolute URL (`src/lib/site.ts`).
+- `GOOGLE_SITE_VERIFICATION` optionally adds the Search Console meta tag.
+- `node scripts/generate-brand-assets.mjs` regenerates the icons and social image from the header logo.
 
 ## Tech stack
 

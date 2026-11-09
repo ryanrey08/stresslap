@@ -22,10 +22,21 @@ export function useFaceDetection() {
   const runId = useRef(0);
   const urlRef = useRef<string | null>(null);
 
-  // Warm up the model in the background so the first detection is quick.
+  // Warm up the model (about 18 MB) after the visitor's first interaction, so the first detection
+  // is quick without that download competing with the initial page load.
   useEffect(() => {
-    const t = window.setTimeout(() => void loadFaceLandmarker().catch(() => {}), 800);
-    return () => window.clearTimeout(t);
+    const events = ["pointermove", "pointerdown", "touchstart", "keydown", "dragenter"] as const;
+    let timer: number | undefined;
+    const remove = () => events.forEach((e) => window.removeEventListener(e, warmUp));
+    function warmUp() {
+      remove();
+      timer = window.setTimeout(() => void loadFaceLandmarker().catch(() => {}), 200);
+    }
+    events.forEach((e) => window.addEventListener(e, warmUp, { passive: true }));
+    return () => {
+      remove();
+      window.clearTimeout(timer);
+    };
   }, []);
 
   const releaseUrl = () => {

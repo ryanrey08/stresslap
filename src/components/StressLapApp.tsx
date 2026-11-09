@@ -223,14 +223,16 @@ export function StressLapApp() {
       <input ref={fileInput} type="file" accept={ACCEPT_ATTR} className="hidden" onChange={onInputChange} data-testid="file-input" />
 
       <div className="text-center">
-        <h1 className="font-display anim-wiggle-slow inline-block text-6xl tracking-wide drop-shadow-[0_6px_0_rgba(0,0,0,0.3)] sm:text-7xl">
-          Stress<span className="text-yellow-300">Lap</span>
+        <h1 className="font-display">
+          <span className="anim-wiggle-slow inline-block text-6xl tracking-wide drop-shadow-[0_6px_0_rgba(0,0,0,0.3)] sm:text-7xl">
+            Stress<span className="text-yellow-300">Lap</span>
+          </span>
+          <span className="mt-1 block text-2xl tracking-wide text-pink-200 sm:text-3xl">Release Your Stress, One Slap at a Time!</span>
         </h1>
-        <p className="font-display mt-1 text-2xl tracking-wide text-pink-200 sm:text-3xl">Release Your Stress, One Slap at a Time!</p>
         <p className="mx-auto mt-2 max-w-2xl text-sm text-white/75 sm:text-base">
           Upload a photo, we find the face, and you unleash cartoon slaps, punches and kicks. The face reacts to every hit with
-          wobbles, wide eyes, dropped jaws and comic sound effects. A free stress relief game that runs entirely in your
-          browser, just for fun.
+          wobbles, wide eyes, dropped jaws and comic sound effects. StressLap is a free online stress relief game and funny
+          face reaction game that runs entirely in your browser, just for fun.
         </p>
       </div>
 
